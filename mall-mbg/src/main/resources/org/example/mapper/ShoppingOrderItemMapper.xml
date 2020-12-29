@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.example.mapper.ShoppingOrderItemMapper">
+  <resultMap id="BaseResultMap" type="org.example.model.ShoppingOrderItem">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="product_id" jdbcType="INTEGER" property="productId" />
+    <result column="buyCount" jdbcType="INTEGER" property="buycount" />
+    <result column="sub_money" jdbcType="DOUBLE" property="subMoney" />
+    <result column="order_id" jdbcType="INTEGER" property="orderId" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, product_id, buyCount, sub_money, order_id
+  </sql>
+  
+  <select id="selectByOrderId" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from shopping_order_item
+    where order_id=#{id}
+  </select>
+  
+  <select id="selectByPrimaryKey" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from shopping_order_item
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer">
+    delete from shopping_order_item
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="org.example.model.ShoppingOrderItem">
+    insert into shopping_order_item (id, product_id, buyCount, 
+      sub_money, order_id)
+    values (#{id,jdbcType=INTEGER}, #{productId,jdbcType=INTEGER}, #{buycount,jdbcType=INTEGER}, 
+      #{subMoney,jdbcType=DOUBLE}, #{orderId,jdbcType=INTEGER})
+  </insert>
+  <insert id="insertSelective" parameterType="org.example.model.ShoppingOrderItem">
+    insert into shopping_order_item
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        id,
+      </if>
+      <if test="productId != null">
+        product_id,
+      </if>
+      <if test="buycount != null">
+        buyCount,
+      </if>
+      <if test="subMoney != null">
+        sub_money,
+      </if>
+      <if test="orderId != null">
+        order_id,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="id != null">
+        #{id,jdbcType=INTEGER},
+      </if>
+      <if test="productId != null">
+        #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="buycount != null">
+        #{buycount,jdbcType=INTEGER},
+      </if>
+      <if test="subMoney != null">
+        #{subMoney,jdbcType=DOUBLE},
+      </if>
+      <if test="orderId != null">
+        #{orderId,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="org.example.model.ShoppingOrderItem">
+    update shopping_order_item
+    <set>
+      <if test="productId != null">
+        product_id = #{productId,jdbcType=INTEGER},
+      </if>
+      <if test="buycount != null">
+        buyCount = #{buycount,jdbcType=INTEGER},
+      </if>
+      <if test="subMoney != null">
+        sub_money = #{subMoney,jdbcType=DOUBLE},
+      </if>
+      <if test="orderId != null">
+        order_id = #{orderId,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="org.example.model.ShoppingOrderItem">
+    update shopping_order_item
+    set product_id = #{productId,jdbcType=INTEGER},
+      buyCount = #{buycount,jdbcType=INTEGER},
+      sub_money = #{subMoney,jdbcType=DOUBLE},
+      order_id = #{orderId,jdbcType=INTEGER}
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>

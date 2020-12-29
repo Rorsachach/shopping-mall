@@ -1,0 +1,274 @@
+<html xml:lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/reset.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}">
+    <script type="text/javascript" th:src="@{/js/jquery-1.12.4.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery-ui.min.js}"></script>
+    <link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/font-awesome/5.15.1/css/all.min.css" integrity="sha384-vp86vTRFVJgpjF9jiIGPEEqYqlDwgyBgEF109VFjmqGmIY/Y4HV4d3Gp2irVfcrp" crossorigin="anonymous">
+</head>
+<body>
+<div id="wrapper">
+    <div id="content">
+        <div id="card">
+            <div id="front">
+                <div id="arrow"><i class="fa fa-arrow-left"></i></div>
+                <div id="top-pic"></div>
+                <div id="avatar"></div>
+                <div id="info-box">
+                    <div class="info">
+                        <h1>冯雪阳</h1>
+                        <h2>17180288003</h2>
+                    </div>
+                </div>
+                <div id="social-bar">
+                    <a href="javascript:void(0);" class="more-info">
+                        <i class="fab fa-github"></i>
+                    </a>
+                </div>
+            </div>
+            <div id="back">
+                <div class="back-info">
+                    <p>
+                        <img style="margin-left: 13px;" src="http://qrcode.leipi.org.cn:80/js.html?qw=150&qc=https%3A%2F%2Fgithub.com%2FRorsachach&ql=undefined&lw=NaN&lh=NaN&bor=undefined&op=img" >
+                    </p>
+                </div>
+                <div id="social-bar">
+                    <a href="javascript:void(0);" class="more-info">
+                        <i class="fa fa-undo"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+        <div id="background">
+            <div id="background-image"></div>
+        </div>
+    </div>
+</div>
+</body>
+
+<style type="text/css" th:inline="text">
+    * {
+        box-sizing: border-box;
+        transition: 0.5s ease-in-out;
+    }
+
+    html,
+    body {
+        background-color: #220200;
+        height: 100%;
+        overflow: hidden;
+        font-family: helvetica neue, helvetica, arial, sans-serif;
+    }
+    html h1,
+    body h1 {
+        font-size: 25px;
+        font-weight: 200;
+        color: white;
+        line-height: 30px;
+        margin-bottom: 10px;
+    }
+    html h2,
+    body h2 {
+        font-size: 15px;
+        color: #003d6b;
+    }
+
+    #wrapper {
+        opacity: 0;
+        display: table;
+        height: 100%;
+        width: 100%;
+    }
+    #wrapper.loaded {
+        opacity: 1;
+        transition: 2.5s ease-in-out;
+    }
+    #wrapper #content {
+        display: table-cell;
+        vertical-align: middle;
+    }
+
+    #card {
+        height: 400px;
+        width: 300px;
+        margin: 0 auto;
+        position: relative;
+        z-index: 1;
+        perspective: 600px;
+    }
+    #card #front,
+    #card #back {
+        border-radius: 10px;
+        height: 100%;
+        width: 100%;
+        position: absolute;
+        left: 0;
+        top: 0;
+        transform-style: preserve-3d;
+        backface-visibility: hidden;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    }
+    #card #front {
+        transform: rotateY(0deg);
+        overflow: hidden;
+        z-index: 1;
+    }
+    #card #front #arrow {
+        position: absolute;
+        height: 50px;
+        line-height: 50px;
+        font-size: 30px;
+        z-index: 10;
+        bottom: 0;
+        right: 50px;
+        color: rgba(255, 255, 255, 0.5);
+        animation: arrowWiggle 1s ease-in-out infinite;
+    }
+    #card #front #top-pic {
+        height: 50%;
+        width: 100%;
+        background-image: url("[[@{/}]]images/background.jpg");
+        background-size: cover;
+    }
+    #card #front #avatar {
+        width: 114px;
+        height: 114px;
+        top: 50%;
+        left: 50%;
+        margin: -77px 0 0 -57px;
+        border-radius: 100%;
+        box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.8), 0 4px 5px rgba(29, 46, 200, 0.6), 0 0 50px 50px rgba(255, 255, 255, 0.25);
+        background-image: url("[[@{/}]]images/pic.jpeg");
+        background-size: contain;
+        position: absolute;
+        z-index: 1;
+    }
+    #card #front #info-box {
+        height: 50%;
+        width: 100%;
+        position: absolute;
+        display: table;
+        left: 0;
+        bottom: 0;
+        background: rgba(29, 46, 200, 0.6);
+        padding: 50px;
+    }
+    #card #front #social-bar {
+        height: 50px;
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        line-height: 50px;
+        font-size: 18px;
+        text-align: center;
+    }
+    #card #front #social-bar a {
+        display: inline-block;
+        color: #095d95;
+        text-decoration: none;
+        padding: 5px;
+        line-height: 18px;
+        border-radius: 5px;
+    }
+    #card #front #social-bar a:hover {
+        color: #002945;
+        background: rgba(255, 255, 255, 0.3);
+        transition: 0.25s ease-in-out;
+    }
+    #card #back {
+        transform: rotateY(180deg);
+        background-color: rgba(255, 255, 255, 0.6);
+        display: table;
+        z-index: 2;
+        font-size: 13px;
+        line-height: 20px;
+        padding: 50px;
+    }
+    #card #back .back-info {
+        text-align: justify;
+        text-justify: inter-word;
+    }
+    #card #back #social-bar {
+        height: 50px;
+        width: 100%;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        line-height: 50px;
+        font-size: 18px;
+        text-align: center;
+    }
+    #card #back #social-bar a {
+        display: inline-block;
+        line-height: 18px;
+        color: #095d95;
+        text-decoration: none;
+        padding: 5px;
+        border-radius: 5px;
+    }
+    #card #back #social-bar a:hover {
+        color: #002945;
+        background: rgba(66, 137, 223, 0.5);
+        transition: 0.25s ease-in-out;
+    }
+    #card .info {
+        display: table-cell;
+        height: 100%;
+        vertical-align: middle;
+        text-align: center;
+    }
+    #card.flip #front {
+        transform: rotateY(180deg);
+    }
+    #card.flip #back {
+        transform: rotateY(360deg);
+    }
+
+    #background {
+        position: fixed;
+        background-color: black;
+        top: 0;
+        left: 0;
+        height: 100%;
+        width: 100%;
+    }
+    #background #background-image {
+        height: calc(100% + 60px);
+        width: calc(100% + 60px);
+        position: absolute;
+        top: -30px;
+        left: -30px;
+        -webkit-filter: blur(10px);
+        background-image: url("[[@{/}]]images/background.jpg");
+        background-size: cover;
+    }
+
+    @keyframes arrowWiggle {
+        0% {
+            right: 50px;
+        }
+        50% {
+            right: 35px;
+        }
+        100% {
+            right: 50px;
+        }
+    }
+</style>
+<script type="text/javascript">
+    $(window).load(function(){
+        $('#wrapper').addClass('loaded');
+    })
+
+    $('.more-info').click(function(){
+        $("#card").toggleClass('flip');
+        $('#arrow').remove();
+    });
+    $('#background').click(function(){
+        $('#card').removeClass('flip');
+    })
+</script>
+</html>

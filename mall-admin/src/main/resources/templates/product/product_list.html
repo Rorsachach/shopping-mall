@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:shiro="http://www.pollix.at/thymeleaf/shiro">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link rel="stylesheet" th:href="@{/css/bootstrap.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/jquery.dataTables.min.css}" />
+    <link rel="stylesheet" th:href="@{/css/matrix-style.css}" />
+    <link rel="stylesheet" th:href="@{/css/matrix-media.css}" />
+    <link th:href="@{/font-awesome/css/font-awesome.css}" rel="stylesheet" />
+    <title>商品管理</title>
+</head>
+<body>
+
+<!--Header-part-->
+<div id="header">
+    <h1><a href="#">生鲜商品后台管理</a></h1>
+</div>
+<!--close-Header-part-->
+
+<!--top-Header-menu-->
+<div th:include="common/top :: top"></div>
+<div th:include="common/menu :: menu"></div>
+
+<div id="content">
+    <div id="content-header">
+        <div id="breadcrumb"> <a href="#" title="Go to Home" class="tip-bottom"><i class="icon-home"></i> Home</a> <a href="#" class="current">Tables</a> </div>
+    </div>
+    <div class="container-fluid">
+        <hr/>
+        <div class="row-fluid">
+            <div class="span12">
+
+                <div class="widget-box">
+                    <div class="widget-title"> <span class="icon"><i class="icon-th"></i></span>
+                        <h5>商品列表</h5>
+                    </div>
+                    <form class="form-inline">
+                        <button type="button"  onclick="gotoaddProduct();" class="btn btn-info" >新增</button>
+                        <button type="button"  onclick="delById();" class="btn btn-info" >删除</button>
+
+                    </form>
+                    <div class="widget-content nopadding">
+                        <table class="table table-striped table-bordered" cellspacing="0" width="100%" id="datatable" >
+                            <thead>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" class="checkall" />
+                                </th>
+                                <th>商品名称</th>
+                                <th>商品编号</th>
+                                <th>商品价格</th>
+                                <th>商品数量</th>
+                                <th>商品描述</th>
+                                <th>商品状态</th>
+                                <th>商品创建时间</th>
+                                <th>操作</th>
+                            </tr>
+                            <tr>
+                                <th>
+                                    <input type="checkbox" class="checkall" />
+                                </th>
+                                <td class="center">猕猴桃</td>
+                                <td class="center">1001</td>
+                                <td class="center">10元</td>
+                                <td class="center">1</td>
+                                <td class="center">味道鲜美</td>
+                                <td class="center">已上架</td>
+                                <td class="center">
+                                    2020-11-15 18:30:00
+                                </td>
+                                <td class="center">
+                                    <a
+                                        href="product_update.html" title="修改" class="link_icon">修改</a>
+                                    <a href="#" title="删除" class="link_icon" onclick="#"> 删除</a></td>
+                            </tr>
+                            </thead>
+                        </table>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="application/javascript">
+    //新增页面
+    function gotoaddProduct(){
+        window.location.href = "/toaddpage";
+    }
+</script>
+</body>
+</html>

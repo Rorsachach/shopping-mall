@@ -1,0 +1,304 @@
+<html xml:lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html;charset=UTF-8">
+    <title>天天生鲜-购物车</title>
+    <link rel="stylesheet" type="text/css" th:href="@{/css/reset.css}">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/main.css}">
+    <script type="text/javascript" th:src="@{/js/jquery-1.12.4.min.js}"></script>
+    <script type="text/javascript" th:src="@{/js/jquery-ui.min.js}"></script>
+</head>
+<body>
+<div class="header_con">
+    <div class="header">
+        <div class="welcome fl">欢迎来到天天生鲜!</div>
+        <div class="fr">
+            <div class="login_btn fl" th:if="${session.user} == null">
+                <a href="login.html" th:href="@{/gotologin}">登录</a>
+                <span>|</span>
+                <a href="register.html" th:href="@{/gotoregister}">注册</a>
+            </div>
+            <div class="login_info fl" th:if="${session.user} != null">
+                欢迎您：<em th:text="${session.user.username}"></em>
+                <span>|</span>
+                <a href="login.html" th:href="@{/member/logout}">注销</a>
+            </div>
+            <div class="user_link fl">
+                <span>|</span>
+                <a href="user_center_info.html" th:href="@{/usercenter}">用户中心</a>
+                <span>|</span>
+                <a href="cart.html" th:href="@{/cart/}">我的购物车</a>
+                <span>|</span>
+                <a href="user_center_order.html" th:href="@{/orders/myorder}">我的订单</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="search_bar clearfix">
+    <a href="index.html" th:href="@{/index}" class="logo fl"><img th:src="@{/images/logo.png}"></a>
+    <div class="sub_page_name fl">|&nbsp;&nbsp;&nbsp;&nbsp;购物车</div>
+    <div class="search_con fr">
+        <input type="text" class="input_text fl" name="" placeholder="搜索商品">
+        <input type="button" class="input_btn fr" name="" value="搜索">
+    </div>
+</div>
+
+<div class="total_count">全部商品<em th:text="${shoppingcount}">2</em>件</div>
+<ul class="cart_list_th clearfix">
+    <li class="col01">商品名称</li>
+    <li class="col02">商品单位</li>
+    <li class="col03">商品价格</li>
+    <li class="col04">数量</li>
+    <li class="col05">小计</li>
+    <li class="col06">操作</li>
+</ul>
+<ul class="cart_list_td clearfix" th:each="product:${session.productList}">
+    <li class="col01"><input class="check" type="checkbox" name="selectproductid" th:value="${product.id}"
+                             checked="true" onclick="setSessionCart(this);"></li>
+    <li class="col02"><img th:src="${product.packingUnit}"></li>
+    <li class="col03" th:text="${product.name}">大兴大棚草莓<br><em th:text="${product.getPrice()}+'/500g'">16.80元/500g</em>
+    </li>
+    <li class="col04">500g</li>
+    <li class="col05" th:text="${product.price}">16.80元</li>
+    <li class="col06">
+        <div class="num_add">
+            <a href="javascript:;" class="minus fl">-</a>
+            <input type="text" class="num_show fl" th:value="${product.count}">
+            <a href="javascript:;" class="add fl">+</a>
+        </div>
+    </li>
+    <li class="col07">16.80元</li>
+    <li class="col08"><a th:href="@{/cart/del/{productid}(productid=${product.id})}">删除</a></li>
+</ul>
+
+
+<ul class="settlements">
+    <li class="col01"><input type="checkbox" id="allCheck" name="allCheck" checked="true"></li>
+    <li class="col02">全选</li>
+    <li class="col03">合计(不含运费)：<span>¥</span><em id="totalCost" th:text="${totalmoney}">42.60</em><br>共计<b id="count"
+                                                                                                           th:text="${shoppingcount}">2</b>件商品
+    </li>
+    <li class="col04"><a href="javaScript:orderDetail();">去结算</a></li>
+</ul>
+
+<div class="footer">
+    <div class="foot_link">
+        <a href="#" th:href="@{/gotoMyInfo}">关于我们</a>
+        <span>|</span>
+        <a href="#">联系我们</a>
+        <span>|</span>
+        <a href="#">招聘人才</a>
+        <span>|</span>
+        <a href="#">友情链接</a>
+    </div>
+    <p>CopyRight © 2016 北京天天生鲜信息技术有限公司 All Rights Reserved</p>
+    <p>电话：010-****888 京ICP备*******8号</p>
+</div>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $(".add").click(function () {
+            var n = $(this).prev().val();
+            n = parseInt(n) + 1;
+			var row = $(this).parent().parent().parent().index() - 4;
+            if (n == 1) {
+                $(this).prev().val(n);
+                $(".check")[row].checked = true;
+            } else {
+                $(this).prev().val(n);
+            }
+
+            subSum($(this).prev());
+            totalSum();
+            count();
+			setSessionCart($(".check")[row]);
+        });
+        //TODO:修改
+        $(".minus").click(function () {
+            var n = $(this).next().val();
+            n = parseInt(n) - 1
+			var row = $(this).parent().parent().parent().index() - 4;
+            if (n <= 0) {
+                n = 0;
+                $(this).next().val(n);
+                $(".check")[row].checked = false;
+            } else {
+                $(this).next().val(n);
+            }
+            subSum($(this).next());
+            totalSum();
+            count();
+			setSessionCart($(".check")[row]);
+        });
+        $(".check").click(function (){
+            var row = $(this).parent().parent().index() - 4;
+            subSumE($(".cart_list_td")[row]);
+            totalSum();
+            count();
+            setSessionCart(this);
+        });
+        //TODO: 修改setSessionCart
+        $("#allCheck").click(function (){
+            var all = this;
+            var l = $(".check").length;
+            if (all.checked == true){
+                for(i=0; i<l; i++){
+                    $(".check")[i].checked=true;
+                    subSumE($(".cart_list_td")[i]);
+                    setSessionCart($(".check")[i]);
+                }
+            } else {
+                for(i=0; i<l; i++){
+                    $(".check")[i].checked=false;
+                    subSumE($(".cart_list_td")[i]);
+                    setSessionCart($(".check")[i]);
+                }
+            }
+            totalSum();
+            count();
+        })
+
+        nums = $(".cart_list_td");
+        for(i=0; i<nums.length; i++){
+            subSumE(nums[i]);
+        }
+        totalSum();
+    })
+
+    function subSum(obj) {
+        var n = parseInt(obj.val());
+        var cost = obj.parent().parent().prev().text();
+        var total = n * parseFloat(cost);
+        obj.parent().parent().next().text(total.toFixed(2));
+    }
+
+    function subSumE(obj) {
+        var n = obj.getElementsByClassName("num_show")[0].value;
+        var cost = obj.getElementsByClassName("col05")[0].innerHTML;
+        var total = parseInt(n) * parseFloat(cost);
+        if(obj.getElementsByClassName("check")[0].checked != true){
+            total = 0.0;
+        }
+        obj.getElementsByClassName("col07")[0].innerHTML=total.toFixed(2);
+    }
+
+    function totalSum() {
+        var nodes = $(".col07");
+        var sum = 0;
+        for (i = 0; i < nodes.length; i++) {
+            sum += parseFloat(nodes[i].innerHTML);
+        }
+
+        $("#totalCost").text(sum.toFixed(2));
+    }
+
+    function count() {
+        var nodes = $(".num_show");
+        var count = 0;
+        for (i = 0; i < nodes.length; i++) {
+            if ($(".check")[i].checked == true){
+                count += parseInt(nodes[i].value);
+            }
+        }
+        $("#count").text(count);
+    }
+
+    function setSessionCart(obj){
+    	var num = obj.parentElement.parentElement.getElementsByClassName("num_show")[0];
+		var data = {};
+		data.id=parseInt(obj.value);
+		data.status=obj.checked;
+		data.count=parseInt(num.value);
+		$.ajax({
+			type: "POST",
+			url: "/utils/setSessionProductList",
+			data: data
+		});
+	}
+</script>
+
+<script type="text/javascript">
+    //去结算
+    function orderDetail() {
+        //获取需要购买商品的编号
+        var _productBuf =
+            document.getElementsByName("selectproductid");
+        var url = "/orders/orderpage?t=" + Math.random();
+        for (var i = 0; i < _productBuf.length; i++) {
+            if (_productBuf[i].checked == true) {
+                url = url + "&selectedpid=" + _productBuf[i].value;
+            }
+        }
+
+        window.location.href = url;
+    }
+</script>
+
+<script type="text/javascript">
+
+    // 两个浮点数求和
+    function accAdd(num1,num2){
+        var r1,r2,m;
+        try{
+            r1 = num1.toString().split('.')[1].length;
+        }catch(e){
+            r1 = 0;
+        }
+        try{
+            r2=num2.toString().split(".")[1].length;
+        }catch(e){
+            r2=0;
+        }
+        m=Math.pow(10,Math.max(r1,r2));
+        // return (num1*m+num2*m)/m;
+        return Math.round(num1*m+num2*m)/m;
+    }
+
+    // 两个浮点数相减
+    function accSub(num1,num2){
+        var r1,r2,m;
+        try{
+            r1 = num1.toString().split('.')[1].length;
+        }catch(e){
+            r1 = 0;
+        }
+        try{
+            r2=num2.toString().split(".")[1].length;
+        }catch(e){
+            r2=0;
+        }
+        m=Math.pow(10,Math.max(r1,r2));
+        n=(r1>=r2)?r1:r2;
+        return (Math.round(num1*m-num2*m)/m).toFixed(n);
+    }
+
+    // 两个浮点数相除
+    function accDiv(num1,num2){
+        var t1,t2,r1,r2;
+        try{
+            t1 = num1.toString().split('.')[1].length;
+        }catch(e){
+            t1 = 0;
+        }
+        try{
+            t2=num2.toString().split(".")[1].length;
+        }catch(e){
+            t2=0;
+        }
+        r1=Number(num1.toString().replace(".",""));
+        r2=Number(num2.toString().replace(".",""));
+        return (r1/r2)*Math.pow(10,t2-t1);
+    }
+
+    // 两个浮点数相乘
+    function accMul(num1,num2){
+        var m=0,s1=num1.toString(),s2=num2.toString();
+        try{m+=s1.split(".")[1].length}catch(e){};
+        try{m+=s2.split(".")[1].length}catch(e){};
+        return Number(s1.replace(".",""))*Number(s2.replace(".",""))/Math.pow(10,m);
+    }
+
+</script>
+
+</body>
+</html>
